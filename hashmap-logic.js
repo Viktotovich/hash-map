@@ -155,15 +155,16 @@ class HashMap {
     const hashedKey = this.hash(key);
     let location = this.buckets[hashedKey];
 
-    //what luck wow, I am so glad I did what I did
     let hasItem = location.find(key);
     return hasItem;
   }
 
   has(key) {
-    /* 
-        return true or false, depending if key is in the hash map
-    */
+    const hashedKey = this.hash(key);
+    let location = this.buckets[hashedKey];
+
+    let hasItem = location.find(key);
+    return hasItem === null ? false : true;
   }
 
   remove(key) {
@@ -214,9 +215,12 @@ test.set("jacket", "blue");
 test.set("kite", "pink");
 test.set("lion", "golden");
 
+//mini tests
 console.log(test.get("dog"));
 console.log(test.get("babayetu"));
 
+console.log(test.has("frog"));
+console.log(test.has("forg"));
 /* 
 
     Hashmap capacity should be at 0.75 (full capacity) at this point.
