@@ -8,6 +8,24 @@ To use whenever we try to access a bucket through an index.
 We want to through an error if we go out of bounds, because 
 JS would normally allow it.
 */
+//Okay - we also need to make a linkedList class
+class LinkedList {
+  constructor() {
+    this.next = null;
+  }
+
+  append(value) {
+    let nodeItem = new Node(value);
+    this.next = nodeItem;
+  }
+}
+
+class Node {
+  constructor(value) {
+    this.value = value;
+    this.next = null;
+  }
+}
 
 class HashMap {
   constructor() {
@@ -37,11 +55,14 @@ class HashMap {
     
     However, if someone else is called instead of Carlos - we handle it through collision resolution. We make a linked list of bucket 3 where Carlos links to the second value Carla, who will point to null*/
     this.checkLoad();
+    const hashedKey = this.hash(key);
+    this.collisionCheck(key);
+
+    this.buckets[hashedKey].value = value;
   }
 
-  /* 
-    We need a way to grow the buckets by calculating the load factor, if the load factor is called after set, and it goes overboard - we grow the bucket. Maybe by *2?
-   */
+  collisionCheck(index) {}
+
   checkLoad() {
     /* Pseudocode:
         1 - Calculate bucket load factor
@@ -53,9 +74,7 @@ class HashMap {
     let currentLength = this.length();
     let loadFactor = Math.round(capacity * 0.75);
 
-    if (loadFactor <= currentLength) {
-      //increase space
-      console.log(loadFactor, currentLength);
+    if (loadFactor < currentLength) {
       const magnitude = (this.currentMaxCapacity *= 2);
       this.increaseLoad(magnitude);
     } else if (this.buckets.length === 0) {
@@ -66,7 +85,7 @@ class HashMap {
 
   increaseLoad(magnitude) {
     for (let i = 0; i < magnitude; i++) {
-      this.buckets.push([]);
+      this.buckets.push(new LinkedList());
     }
   }
 
