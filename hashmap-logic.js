@@ -12,11 +12,24 @@ JS would normally allow it.
 class LinkedList {
   constructor() {
     this.next = null;
+    this.size = 0;
   }
 
   append(value) {
-    let nodeItem = new Node(value);
-    this.next = nodeItem;
+    let lastObj = this.tail();
+    lastObj.next = new Node(value);
+    this.size += 1;
+  }
+
+  tail() {
+    function findTail(startPoint) {
+      if (startPoint.next === null) {
+        return startPoint;
+      } else {
+        return findTail(startPoint.next);
+      }
+    }
+    return findTail(this);
   }
 }
 
@@ -56,12 +69,9 @@ class HashMap {
     However, if someone else is called instead of Carlos - we handle it through collision resolution. We make a linked list of bucket 3 where Carlos links to the second value Carla, who will point to null*/
     this.checkLoad();
     const hashedKey = this.hash(key);
-    this.collisionCheck(key);
-
-    this.buckets[hashedKey].value = value;
+    let location = this.buckets[hashedKey];
+    location.append(value);
   }
-
-  collisionCheck(index) {}
 
   checkLoad() {
     /* Pseudocode:
@@ -86,6 +96,7 @@ class HashMap {
   increaseLoad(magnitude) {
     for (let i = 0; i < magnitude; i++) {
       this.buckets.push(new LinkedList());
+      //Prevent all values from being lost
     }
   }
 
