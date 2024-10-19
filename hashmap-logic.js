@@ -157,6 +157,12 @@ class HashMap {
     }
 
     hashCode = hashCode % capacity;
+
+    //final test
+    if (hashCode < 0 || hashCode >= this.buckets.length) {
+      throw new Error("Trying to access index out of bound");
+    }
+
     return hashCode;
   }
 
@@ -199,7 +205,6 @@ class HashMap {
   }
 
   increaseLoad(magnitude) {
-    /*Extract current values and keys, have another function to processBulk([...args]), call forEach and set */
     let savedEntries = this.entries();
     this.buckets = [];
 
@@ -248,7 +253,6 @@ class HashMap {
   }
 
   length() {
-    //makes more sense than bucketLength
     return this.keysCount;
   }
 
@@ -286,11 +290,9 @@ class HashMap {
   }
 
   entries() {
-    /*
-        returns an array that contains each key, value pair. i.e:
-        [[firstKey, firstValue], [secondKey, secondValue]]
-    */
-    /* I've noticed the order of keys() and values() is the same, but calling one after the other would make this an O(n^2) function. We don't want that.
+    /* I've noticed the order of keys() and values() is the same,
+    but calling one after the other would make this an O(n^2)
+    function. We don't want that.
      */
 
     let entriesArr = [];
