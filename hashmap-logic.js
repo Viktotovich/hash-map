@@ -1,14 +1,3 @@
-/* Self restriction due JS's loose nature:
-
-if (index < 0 || index >= buckets.length) {
-  throw new Error("Trying to access index out of bound");
-}
-
-To use whenever we try to access a bucket through an index.
-We want to through an error if we go out of bounds, because 
-JS would normally allow it.
-*/
-//Okay - we also need to make a linkedList class
 class LinkedList {
   constructor() {
     this.next = null;
@@ -125,9 +114,7 @@ class HashMap {
     this.currentMaxCapacity = 16;
   }
 
-  /* This is a very basic hashing function, this could easily go out of bounds, or have many collisions - it's best to try something else based off of this 
-  
-  Also, we are only going to deal with strings - not numbers or objects*/
+  // It works so we won't touch it
   hash(key) {
     let hashCode = 0;
     let capacity = this.getCapacity();
@@ -202,7 +189,6 @@ class HashMap {
   }
 
   remove(key) {
-    //remove key, return true. Else, return false
     const hashedKey = this.hash(key);
     let location = this.buckets[hashedKey];
 
@@ -237,7 +223,6 @@ class HashMap {
   }
 
   keys() {
-    //returns an array containing all the keys in the hash map
     let keyArr = [];
     this.buckets.forEach((bucket) => {
       /*JavaScript doing JavaScript things, original arr is not 
