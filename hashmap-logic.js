@@ -15,10 +15,39 @@ class LinkedList {
     this.size = 0;
   }
 
-  append(value) {
+  append(value, key) {
     let lastObj = this.tail();
-    lastObj.next = new Node(value);
+    lastObj.next = new Node(value, key);
     this.size += 1;
+  }
+
+  change(value, key) {
+    let oldValue = this.find(key);
+    oldValue.value = value;
+    console.log(oldValue);
+  }
+
+  find(searchItem) {
+    let currentObj = this.next;
+
+    for (let i = 0; i < this.size; i++) {
+      if (currentObj.key === searchItem) {
+        return currentObj;
+      } else if (currentObj.next === null) {
+        console.error("Such item does not exist");
+      } else {
+        currentObj = currentObj.next;
+      }
+    }
+  }
+
+  //The separation of concerns here is brilliant
+  updateData(value, key) {
+    if (this.contains(key)) {
+      this.change(value, key);
+    } else {
+      this.append(value, key);
+    }
   }
 
   tail() {
@@ -31,11 +60,31 @@ class LinkedList {
     }
     return findTail(this);
   }
+
+  resetSize() {
+    this.size *= 0;
+  }
+
+  contains(key) {
+    let depth = this.size;
+    let currentLocation = this;
+
+    for (let i = 0; i <= depth; i++) {
+      if (currentLocation.key === key) {
+        return true;
+      } else if (currentLocation.next === null) {
+        return false;
+      } else {
+        currentLocation = currentLocation.next;
+      }
+    }
+  }
 }
 
 class Node {
-  constructor(value) {
+  constructor(value, key) {
     this.value = value;
+    this.key = key;
     this.next = null;
   }
 }
@@ -70,7 +119,8 @@ class HashMap {
     this.checkLoad();
     const hashedKey = this.hash(key);
     let location = this.buckets[hashedKey];
-    location.append(value);
+
+    location.updateData(value, key);
   }
 
   checkLoad() {
@@ -96,7 +146,7 @@ class HashMap {
   increaseLoad(magnitude) {
     for (let i = 0; i < magnitude; i++) {
       this.buckets.push(new LinkedList());
-      //Prevent all values from being lost
+      //logic to prevent all values from being lost
     }
   }
 
