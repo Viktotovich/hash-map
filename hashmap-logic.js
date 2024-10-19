@@ -172,6 +172,12 @@ class HashMap {
     this.keysCount += location.updateData(value, key);
   }
 
+  reloadSavedData(key, value) {
+    const hashedKey = this.hash(key);
+    let location = this.buckets[hashedKey];
+    location.updateData(value, key);
+  }
+
   checkLoad() {
     /* Pseudocode:
         1 - Calculate bucket load factor
@@ -194,10 +200,16 @@ class HashMap {
 
   increaseLoad(magnitude) {
     /*Extract current values and keys, have another function to processBulk([...args]), call forEach and set */
+    let savedEntries = this.entries();
+    this.buckets = [];
+
     for (let i = 0; i < magnitude; i++) {
       this.buckets.push(new LinkedList());
-      //logic to prevent all values from being lost
     }
+
+    savedEntries.forEach((entry) => {
+      this.reloadSavedData(entry[0], entry[1]);
+    });
   }
 
   resetLoad() {
@@ -241,7 +253,7 @@ class HashMap {
   }
 
   getCapacity() {
-    return this.buckets.length;
+    return this.currentMaxCapacity;
   }
 
   clear() {
@@ -302,8 +314,8 @@ test.set("grape", "purple");
 test.set("hat", "black");
 test.set("ice cream", "white");
 test.set("jacket", "blue");
-//test.set("kite", "pink");
-//test.set("lion", "golden");
+test.set("kite", "pink");
+test.set("lion", "golden");
 
 //mini tests
 console.log(test.get("dog"));
@@ -312,7 +324,11 @@ console.log(test.get("babayetu"));
 console.log(test.has("frog"));
 console.log(test.has("forg"));
 
-console.log(test.remove("jacket"));
+test.set("kite", "beige");
+
+//console.log(test.clear()); <- works, but better to let it be
+
+//console.log(test.remove("jacket")); <-- works
 console.log(test.remove("spr"));
 
 console.log(test.length());
@@ -321,22 +337,13 @@ console.log(test.keys());
 console.log(test.values());
 console.log(test.entries());
 
-//console.log(test.clear()); <- works, but better to let it be
+// This is a TNT
 
-/* 
-
-    Hashmap capacity should be at 0.75 (full capacity) at this point.
-
-    Check if my system/methods reflect that calculation correctly. If not, re-do.
-
-    Now with a full hash map, try overwriting a few nodes using set(key, value). By right, this should only over-write the existing values of your nodes and not add new ones.
-*/
+//  test.set('moon', 'silver')
 
 /* 
     Un-comment this node, it should make our hashMap exceed our current load factor and expand our buckets (grow the hashmap basically)
 */
-
-//  test.set('moon', 'silver')
 
 /* 
     If done correctly, the capacity of our hash maps should increase and we should get spread out nodes - not too biased and not many collisions.
