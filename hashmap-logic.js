@@ -94,6 +94,20 @@ class LinkedList {
       }
     }
   }
+
+  getKeys() {
+    let depth = this.size;
+    let currentLocation = this.next;
+    let keyArr = [];
+
+    for (let i = 0; i < depth; i++) {
+      if (currentLocation.key !== undefined) {
+        keyArr.push(currentLocation.key);
+        currentLocation = currentLocation.next;
+      }
+    }
+    return keyArr;
+  }
 }
 
 class Node {
@@ -213,11 +227,24 @@ class HashMap {
   }
 
   clear() {
-    //clear all entries
+    this.resetLoad();
+    let magnitude = this.currentMaxCapacity;
+    this.buckets = [];
+    // the failure of increaseLoad is a current success
+    for (let i = 0; i < magnitude; i++) {
+      this.buckets.push(new LinkedList());
+    }
   }
 
   keys() {
     //returns an array containing all the keys in the hash map
+    let keyArr = [];
+    this.buckets.forEach((bucket) => {
+      /*JavaScript doing JavaScript things, original arr is not 
+      modified - so we have to do it ourselves*/
+      keyArr = keyArr.concat(bucket.getKeys());
+    });
+    return keyArr;
   }
 
   values() {
@@ -259,6 +286,11 @@ console.log(test.remove("jacket"));
 console.log(test.remove("spr"));
 
 console.log(test.length());
+
+console.log(test.keys());
+
+//console.log(test.clear()); <- works, but better to let it be
+
 /* 
 
     Hashmap capacity should be at 0.75 (full capacity) at this point.
