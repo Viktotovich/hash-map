@@ -11,8 +11,9 @@ JS would normally allow it.
 
 class HashMap {
   constructor() {
-    //not sure yet what properties to include, buckets?
+    this.buckets = [];
     this.bucketSize = 0;
+    this.currentMaxCapacity = 16;
   }
 
   /* This is a very basic hashing function, this could easily go out of bounds, or have many collisions - it's best to try something else based off of this 
@@ -20,13 +21,14 @@ class HashMap {
   Also, we are only going to deal with strings - not numbers or objects*/
   hash(key) {
     let hashCode = 0;
+    let capacity = this.getCapacity();
 
     const primeNumber = 31;
     for (let i = 0; i < key.length; i++) {
       hashCode = primeNumber * hashCode + key.charCodeAt(i);
     }
 
-    hashCode = hashCode % this.bucketSize;
+    hashCode = hashCode % capacity;
     return hashCode;
   }
 
@@ -46,6 +48,30 @@ class HashMap {
         2 - If above, increase size and re-hash
         3 - If normal, keep everything the same
     */
+
+    let capacity = this.getCapacity();
+    let currentLength = this.length();
+    let loadFactor = Math.round(capacity * 0.75);
+
+    if (loadFactor <= currentLength) {
+      //increase space
+      console.log(loadFactor, currentLength);
+      const magnitude = (this.currentMaxCapacity *= 2);
+      this.increaseLoad(magnitude);
+    } else if (this.buckets.length === 0) {
+      const magnitude = this.currentMaxCapacity;
+      this.increaseLoad(magnitude);
+    }
+  }
+
+  increaseLoad(magnitude) {
+    for (let i = 0; i < magnitude; i++) {
+      this.buckets.push([]);
+    }
+  }
+
+  resetLoad() {
+    this.currentMaxCapacity = 16;
   }
 
   get(key) {
@@ -66,6 +92,10 @@ class HashMap {
 
   length() {
     return this.bucketSize;
+  }
+
+  getCapacity() {
+    return this.buckets.length;
   }
 
   clear() {
