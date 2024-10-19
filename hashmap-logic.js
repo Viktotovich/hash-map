@@ -58,8 +58,10 @@ class LinkedList {
   updateData(value, key) {
     if (this.contains(key)) {
       this.change(value, key);
+      return 0;
     } else {
       this.append(value, key);
+      return 1;
     }
   }
 
@@ -105,7 +107,7 @@ class Node {
 class HashMap {
   constructor() {
     this.buckets = [];
-    this.bucketSize = 0;
+    this.keysCount = 0;
     this.currentMaxCapacity = 16;
   }
 
@@ -130,8 +132,11 @@ class HashMap {
     const hashedKey = this.hash(key);
     let location = this.buckets[hashedKey];
 
-    //this effectively *sets* the new data
-    location.updateData(value, key);
+    /*
+    This is completely opposite of Liskov's principle xD
+    It does 2 things: increase keysCount based on whether the item is added or updated, and it actually updates/appends the item. 
+    */
+    this.keysCount += location.updateData(value, key);
   }
 
   checkLoad() {
@@ -191,6 +196,7 @@ class HashMap {
 
     if (hasItem !== null && hasItem !== undefined) {
       location.remove(key);
+      this.keysCount -= 1;
       return true;
     } else {
       return false;
@@ -198,7 +204,8 @@ class HashMap {
   }
 
   length() {
-    return this.bucketSize;
+    //makes more sense than bucketLength
+    return this.keysCount;
   }
 
   getCapacity() {
@@ -249,8 +256,9 @@ console.log(test.has("frog"));
 console.log(test.has("forg"));
 
 console.log(test.remove("jacket"));
-console.log(test.remove("grape"));
+console.log(test.remove("spr"));
 
+console.log(test.length());
 /* 
 
     Hashmap capacity should be at 0.75 (full capacity) at this point.
