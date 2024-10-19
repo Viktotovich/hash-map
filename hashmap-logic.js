@@ -97,6 +97,38 @@ class LinkedList {
     }
     return keyArr;
   }
+
+  getValues() {
+    let depth = this.size;
+    let currentLocation = this.next;
+    let valueArr = [];
+
+    for (let i = 0; i < depth; i++) {
+      if (currentLocation.value !== undefined) {
+        valueArr.push(currentLocation.value);
+        currentLocation = currentLocation.next;
+      }
+    }
+    return valueArr;
+  }
+
+  getEntries() {
+    let depth = this.size;
+    let currentLocation = this.next;
+    let entriesArr = [];
+    let keyValuePair = [];
+
+    for (let i = 0; i < depth; i++) {
+      if (currentLocation.value !== undefined) {
+        keyValuePair.push(currentLocation.key);
+        keyValuePair.push(currentLocation.value);
+        entriesArr.push(keyValuePair);
+        keyValuePair = [];
+        currentLocation = currentLocation.next;
+      }
+    }
+    return entriesArr;
+  }
 }
 
 class Node {
@@ -234,6 +266,11 @@ class HashMap {
 
   values() {
     //returns an array containing all the values
+    let valueArr = [];
+    this.buckets.forEach((bucket) => {
+      valueArr = valueArr.concat(bucket.getValues());
+    });
+    return valueArr;
   }
 
   entries() {
@@ -241,6 +278,14 @@ class HashMap {
         returns an array that contains each key, value pair. i.e:
         [[firstKey, firstValue], [secondKey, secondValue]]
     */
+    /* I've noticed the order of keys() and values() is the same, but calling one after the other would make this an O(n^2) function. We don't want that.
+     */
+
+    let entriesArr = [];
+    this.buckets.forEach((bucket) => {
+      entriesArr = entriesArr.concat(bucket.getEntries());
+    });
+    return entriesArr;
   }
 }
 
@@ -273,6 +318,8 @@ console.log(test.remove("spr"));
 console.log(test.length());
 
 console.log(test.keys());
+console.log(test.values());
+console.log(test.entries());
 
 //console.log(test.clear()); <- works, but better to let it be
 
