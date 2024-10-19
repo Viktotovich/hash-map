@@ -21,6 +21,20 @@ class LinkedList {
     this.size += 1;
   }
 
+  remove(key) {
+    let item = this;
+    for (let i = 0; i < this.size; i++) {
+      if (item.next.key === key) {
+        /* The future elements next in line, if any*/
+        item.next = item.next.next;
+        this.size -= 1;
+        return;
+      } else {
+        item = item.next;
+      }
+    }
+  }
+
   change(value, key) {
     let oldValue = this.find(key);
     oldValue.value = value;
@@ -141,6 +155,7 @@ class HashMap {
   }
 
   increaseLoad(magnitude) {
+    /*Extract current values and keys, have another function to processBulk([...args]), call forEach and set */
     for (let i = 0; i < magnitude; i++) {
       this.buckets.push(new LinkedList());
       //logic to prevent all values from being lost
@@ -169,6 +184,17 @@ class HashMap {
 
   remove(key) {
     //remove key, return true. Else, return false
+    const hashedKey = this.hash(key);
+    let location = this.buckets[hashedKey];
+
+    let hasItem = location.find(key);
+
+    if (hasItem !== null && hasItem !== undefined) {
+      location.remove(key);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   length() {
@@ -212,8 +238,8 @@ test.set("grape", "purple");
 test.set("hat", "black");
 test.set("ice cream", "white");
 test.set("jacket", "blue");
-test.set("kite", "pink");
-test.set("lion", "golden");
+//test.set("kite", "pink");
+//test.set("lion", "golden");
 
 //mini tests
 console.log(test.get("dog"));
@@ -221,6 +247,10 @@ console.log(test.get("babayetu"));
 
 console.log(test.has("frog"));
 console.log(test.has("forg"));
+
+console.log(test.remove("jacket"));
+console.log(test.remove("grape"));
+
 /* 
 
     Hashmap capacity should be at 0.75 (full capacity) at this point.
