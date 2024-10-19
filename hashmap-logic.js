@@ -189,7 +189,7 @@ class HashMap {
     let currentLength = this.length();
     let loadFactor = Math.round(capacity * 0.75);
 
-    if (loadFactor < currentLength) {
+    if (loadFactor <= currentLength) {
       const magnitude = (this.currentMaxCapacity *= 2);
       this.increaseLoad(magnitude);
     } else if (this.buckets.length === 0) {
@@ -338,23 +338,5 @@ console.log(test.values());
 console.log(test.entries());
 
 // This is a TNT
-
-//  test.set('moon', 'silver')
-
-/* 
-    Un-comment this node, it should make our hashMap exceed our current load factor and expand our buckets (grow the hashmap basically)
-*/
-
-/* 
-    If done correctly, the capacity of our hash maps should increase and we should get spread out nodes - not too biased and not many collisions.
-*/
-
-// Additional tests:
-
-/*
-    
-    With your new hash map, try overwriting a few nodes using set(key, value). Again, this should only over-write existing values of your nodes.
-
-    Test the other methods of your hash maps such as get(key), has(key), remove(key), length(), clear(), keys(), values(), and entries() to check if they are still working as expected after expanding your hash map.
-
-*/
+test.set("moon", "silver");
+console.log(test);
