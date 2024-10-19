@@ -24,7 +24,6 @@ class LinkedList {
   change(value, key) {
     let oldValue = this.find(key);
     oldValue.value = value;
-    console.log(oldValue);
   }
 
   find(searchItem) {
@@ -34,7 +33,7 @@ class LinkedList {
       if (currentObj.key === searchItem) {
         return currentObj;
       } else if (currentObj.next === null) {
-        console.error("Such item does not exist");
+        return null;
       } else {
         currentObj = currentObj.next;
       }
@@ -113,13 +112,11 @@ class HashMap {
   }
 
   set(key, value) {
-    /*value = value assigned to the key. If key already exists, old value is overwritten. i.e: Carlos if called twice will get overwritten by the second call
-    
-    However, if someone else is called instead of Carlos - we handle it through collision resolution. We make a linked list of bucket 3 where Carlos links to the second value Carla, who will point to null*/
     this.checkLoad();
     const hashedKey = this.hash(key);
     let location = this.buckets[hashedKey];
 
+    //this effectively *sets* the new data
     location.updateData(value, key);
   }
 
@@ -155,9 +152,12 @@ class HashMap {
   }
 
   get(key) {
-    /* 
-        takes one argument as a key, gets the hashed value, tries to access a bucket, and returns the value that is assigned to the key. If a key is not found, return null 
-    */
+    const hashedKey = this.hash(key);
+    let location = this.buckets[hashedKey];
+
+    //what luck wow, I am so glad I did what I did
+    let hasItem = location.find(key);
+    return hasItem;
   }
 
   has(key) {
@@ -213,6 +213,9 @@ test.set("ice cream", "white");
 test.set("jacket", "blue");
 test.set("kite", "pink");
 test.set("lion", "golden");
+
+console.log(test.get("dog"));
+console.log(test.get("babayetu"));
 
 /* 
 
